@@ -60,11 +60,18 @@ h3 span {
   align-items: center;
   position: relative;
   transition: all .1s ease-in;
+  background: #e0e0e0;
+
 }
 .drop-area:hover{
   scale: 0.995;
   opacity: 0.6;
   filter: brightness(0.5);
+  background: #d0d0ff;
+}
+.drop-area p {
+  font-size: 16px;
+  color: #0730c5;
 }
 
 #form{
@@ -157,4 +164,30 @@ button.btn_delete svg {
   border-radius: 6px;
   display: inline-block;
   padding: 0 12px;
+}
+#progress-container {
+  width: 350px;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  margin: 10px 0;
+  position: relative;
+  text-align: center;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0;
+  background: #0730c5;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+#progress-text {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  line-height: 20px;
+  color: #0730c5;
 }

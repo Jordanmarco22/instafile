@@ -48,37 +48,44 @@ function generarCadenaAleatoria() {
 
 
 // //BARRA DE PROGRESO 
-// function uploadFile(carpetaRuta, inputId) {
-//   var archivoInput = document.getElementById(inputId);
-//   var archivo = archivoInput.files[0];
-//   var progressBar = document.getElementById('progressBar');
 
-//   var formData = new FormData();
-//   formData.append('archivo', archivo);
-
-//   var xhr = new XMLHttpRequest();
-
-//   xhr.upload.onprogress = function (event) {
-//       if (event.lengthComputable) {
-//           var percentComplete = (event.loaded / event.total) * 100;
-//           progressBar.value = percentComplete;
-//       }
-//   };
-
-//   xhr.onload = function () {
-//       if (xhr.status === 200) {
-//           console.log('Archivo subido con éxito');
-//           // Puedes realizar acciones adicionales después de la carga aquí
-//       } else {
-//           console.error('Error al subir el archivo');
-//       }
-//   };
-
-//   xhr.open('POST', 'upload.php', true);
-//   xhr.send(formData);
-// }
-
-
+function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('archivo', file);
+  
+    const xhr = new XMLHttpRequest();
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+  
+    xhr.upload.onprogress = function (event) {
+      if (event.lengthComputable) {
+        const percentComplete = (event.loaded / event.total) * 100;
+        progressBar.style.width = percentComplete + '%';
+        progressText.textContent = Math.round(percentComplete) + '% cargado';
+      }
+    };
+  
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        console.log('Archivo subido con éxito');
+        progressContainer.style.display = 'none';
+      } else {
+        console.error('Error al subir el archivo');
+      }
+    };
+  
+    xhr.open('POST', 'upload.php', true);
+    progressContainer.style.display = 'block';
+    xhr.send(formData);
+  }
+  
+  // Actualiza la función handleFile para utilizar uploadFile
+  function handleFile(file) {
+    if (file) {
+      uploadFile(file);
+    }
+  }
 //DROP AREA
 
 // Obtén la zona de arrastre y el formulario
@@ -94,14 +101,14 @@ dropArea.addEventListener('dragover', (e) => {
 dropArea.addEventListener('dragleave', () => {
     dropArea.classList.remove('drag-over');
 });
-
+//Para mejorar el evento arrastre
 dropArea.addEventListener('drop', (e) => {
     e.preventDefault();
     dropArea.classList.remove('drag-over');
-    const file = e.dataTransfer.files[0];
-    handleFile(file);
-});
-
+    const files = e.dataTransfer.files;
+    handleFileInput(files);
+  });
+  
 // Función para manejar el archivo seleccionado
 function handleFile(file) {
     if (file) {
@@ -126,4 +133,37 @@ Form.addEventListener('submit', (e) => {
     }
 });
 
-//progres bar 
+function actualizarListaArchivos() {
+    fetch('listaArchivos.php')
+      .then(response => response.json())
+      .then(data => {
+        // Actualiza la lista de archivos en la página
+        const fileList = document.getElementById('file-list');
+        fileList.innerHTML = '';
+        data.forEach(file => {
+          fileList.innerHTML += `<div class='archivos_subidos'>
+                                    <div><a href='descarga/${file}' download class='boton-descargar'>${file}</a></div>
+                                    <div>
+                                      <form action='' method='POST' style='display:inline;'>
+                                        <input type='hidden' name='eliminarArchivo' value='${file}'>
+                                        <button type='submit' class='btn_delete'>
+                                          <!-- SVG icon -->
+                                        </button>
+                                      </form>
+                                    </div>
+                                  </div>`;
+        });
+      });
+  }
+  
+  // Actualiza la lista de archivos cada 5 segundos
+  setInterval(actualizarListaArchivos, 5000);
+//Cargas multiples
+function handleFileInput() {
+  const files = document.getElementById('archivos').files;
+  Array.from(files).forEach(file => {
+    uploadFile(file);
+  });
+}
+
+document.getElementById('archivos').addEventListener('change', handleFileInput);
