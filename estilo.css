@@ -5,7 +5,7 @@ body {
   font-size: 16px;
   color: #f0f0f0; /* Color de texto claro para buen contraste */
   text-align: center;
-  background-image: url('fondo.png'); 
+  background-image: url('fondo.png');   
   padding: 0;
   overflow-x: hidden;
 }

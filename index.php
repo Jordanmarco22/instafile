@@ -112,6 +112,6 @@ try {
             </div>
         </div>
     </div>
-    <p>©Copyright Gianella Blas 2024</p>
+    <p>©Copyright Jordan Bendezu 2024</p>
 </body>
 </html>
