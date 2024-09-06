@@ -14,26 +14,13 @@ if (!carpetaNombre) {
     // Redirige a la nueva URL con el parámetro 'nombre'
     window.location.href = urlConParametro;
 } else {
-    // Extrae el valor del parámetro de la URL
-    const parametros = new URLSearchParams(window.location.search);
-    const carpetaNombre = parametros.get("nombre");
+  // Llama a la función para crear la carpeta con el nombre obtenido
+  crearCarpeta(carpetaNombre);
+}
 
-    // Llama a la función para crear la carpeta con el nombre obtenido
-    function crearCarpeta(carpetaNombre) {
-    $.ajax({
-        url: 'crearCarpeta.php', // Ruta del archivo PHP que crea la carpeta
-        type: 'POST', // Puedes usar POST o GET según tus necesidades
-        data: { nombreCarpeta: carpetaNombre }, // Envía el nombre de la carpeta como datos
-        success: function(response) {
-            console.log('Carpeta creada.'); // Mensaje de éxito (puedes personalizarlo)
-        },
-        error: function() {
-            console.log('Error al crear la carpeta.'); // Mensaje de error (puedes personalizarlo)
-        }
-    });
-}
+   
     
-}
+
 
 // Función para generar un número aleatorio de 3 dígitos
 function generarCadenaAleatoria() {
@@ -167,3 +154,13 @@ function handleFileInput() {
 }
 
 document.getElementById('archivos').addEventListener('change', handleFileInput);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      console.log('ServiceWorker registrado con éxito:', registration);
+    }).catch(error => {
+      console.log('Error al registrar el ServiceWorker:', error);
+    });
+  });
+}
